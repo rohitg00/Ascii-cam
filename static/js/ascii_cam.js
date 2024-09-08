@@ -2,6 +2,7 @@ const video = document.getElementById('video');
 const canvas = document.getElementById('asciiCanvas');
 const ctx = canvas.getContext('2d');
 const startButton = document.getElementById('startButton');
+const saveSnapshotButton = document.getElementById('saveSnapshotButton');
 const inputInfo = document.getElementById('input');
 const asciiDensitySlider = document.getElementById('asciiDensity');
 const characterSetSelect = document.getElementById('characterSet');
@@ -25,6 +26,7 @@ canvas.height = ASCII_HEIGHT * 10;
 ctx.font = '10px monospace';
 
 startButton.addEventListener('click', toggleASCIICam);
+saveSnapshotButton.addEventListener('click', saveSnapshot);
 asciiDensitySlider.addEventListener('input', updateASCIIDensity);
 characterSetSelect.addEventListener('change', updateCharacterSet);
 colorModeCheckbox.addEventListener('change', updateColorMode);
@@ -136,4 +138,22 @@ function updateInputInfo() {
     } else {
         inputInfo.textContent = 'No input';
     }
+}
+
+function saveSnapshot() {
+    if (!isRunning) {
+        alert('Please start the ASCII cam before saving a snapshot.');
+        return;
+    }
+
+    const snapshotCanvas = document.createElement('canvas');
+    snapshotCanvas.width = canvas.width;
+    snapshotCanvas.height = canvas.height;
+    const snapshotCtx = snapshotCanvas.getContext('2d');
+    snapshotCtx.drawImage(canvas, 0, 0);
+
+    const link = document.createElement('a');
+    link.download = 'ascii_snapshot.png';
+    link.href = snapshotCanvas.toDataURL('image/png');
+    link.click();
 }
