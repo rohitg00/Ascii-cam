@@ -240,4 +240,24 @@ document.addEventListener('DOMContentLoaded', () => {
         link.href = snapshotCanvas.toDataURL('image/png');
         link.click();
     }
+
+    // Add background animation
+    function addBackgroundAnimation() {
+        const backgroundContainer = document.querySelector('.background-animation');
+        const cameraIcons = ['📷', '📸', '🎥', '📹', '📽️', '🎬'];
+        const numIcons = 20;
+
+        for (let i = 0; i < numIcons; i++) {
+            const icon = document.createElement('div');
+            icon.className = 'camera-icon';
+            icon.textContent = cameraIcons[Math.floor(Math.random() * cameraIcons.length)];
+            icon.style.left = `${Math.random() * 100}vw`;
+            icon.style.top = `${Math.random() * 100}vh`;
+            icon.style.animationDelay = `${Math.random() * 5}s`;
+            backgroundContainer.appendChild(icon);
+        }
+    }
+
+    // Call the function to add background animation
+    addBackgroundAnimation();
 });
