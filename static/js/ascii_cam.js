@@ -20,6 +20,9 @@ let ASCII_HEIGHT = 60;
 
 let isRunning = false;
 let stream = null;
+let lastFrameTime = 0;
+const targetFPS = 30;
+const frameInterval = 1000 / targetFPS;
 
 canvas.width = ASCII_WIDTH * 10;
 canvas.height = ASCII_HEIGHT * 10;
@@ -30,6 +33,16 @@ saveSnapshotButton.addEventListener('click', saveSnapshot);
 asciiDensitySlider.addEventListener('input', updateASCIIDensity);
 characterSetSelect.addEventListener('change', updateCharacterSet);
 colorModeCheckbox.addEventListener('change', updateColorMode);
+
+// Pre-compute brightness to ASCII char mapping
+const brightnessToChar = new Array(256);
+function updateBrightnessToChar() {
+    for (let i = 0; i < 256; i++) {
+        const charIndex = Math.floor(i / 255 * (ASCII_CHARS.length - 1));
+        brightnessToChar[i] = ASCII_CHARS[charIndex];
+    }
+}
+updateBrightnessToChar();
 
 function updateASCIIDensity() {
     const density = parseInt(asciiDensitySlider.value);
@@ -44,6 +57,7 @@ function updateASCIIDensity() {
 
 function updateCharacterSet() {
     ASCII_CHARS = CHARACTER_SETS[characterSetSelect.value];
+    updateBrightnessToChar();
     if (isRunning) {
         processFrame();
     }
@@ -71,6 +85,7 @@ async function startASCIICam() {
         isRunning = true;
         startButton.textContent = 'Stop ASCII cam';
         updateInputInfo();
+        lastFrameTime = performance.now();
         requestAnimationFrame(processFrame);
     } catch (error) {
         console.error('Error accessing webcam:', error);
@@ -88,8 +103,15 @@ function stopASCIICam() {
     inputInfo.textContent = 'No input';
 }
 
-function processFrame() {
+function processFrame(currentTime) {
     if (!isRunning) return;
+
+    if (currentTime - lastFrameTime < frameInterval) {
+        requestAnimationFrame(processFrame);
+        return;
+    }
+
+    lastFrameTime = currentTime;
 
     ctx.drawImage(video, 0, 0, ASCII_WIDTH, ASCII_HEIGHT);
     const imageData = ctx.getImageData(0, 0, ASCII_WIDTH, ASCII_HEIGHT);
@@ -111,17 +133,17 @@ function processFrame() {
 function convertToASCII(imageData) {
     const asciiFrame = [];
     const isColorMode = colorModeCheckbox.checked;
+    const data = imageData.data;
     for (let y = 0; y < ASCII_HEIGHT; y++) {
         const row = [];
         for (let x = 0; x < ASCII_WIDTH; x++) {
             const index = (y * ASCII_WIDTH + x) * 4;
-            const r = imageData.data[index];
-            const g = imageData.data[index + 1];
-            const b = imageData.data[index + 2];
+            const r = data[index];
+            const g = data[index + 1];
+            const b = data[index + 2];
             const brightness = (r + g + b) / 3;
-            const charIndex = Math.floor(brightness / 255 * (ASCII_CHARS.length - 1));
             row.push({
-                char: ASCII_CHARS[charIndex],
+                char: brightnessToChar[Math.round(brightness)],
                 color: isColorMode ? `rgb(${r},${g},${b})` : `rgb(${brightness},${brightness},${brightness})`
             });
         }
