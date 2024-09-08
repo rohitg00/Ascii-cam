@@ -11,11 +11,40 @@ body {
 
 .container {
     text-align: center;
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 #asciiCanvas {
     background-color: #000;
     border: 1px solid #333;
+    margin-bottom: 20px;
+}
+
+.controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.control-group {
+    margin: 10px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.control-group label {
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.control-group input[type="range"],
+.control-group select {
+    width: 200px;
 }
 
 .arrow {
@@ -28,7 +57,7 @@ body {
     border-radius: 5px;
     cursor: pointer;
     font-size: 16px;
-    margin-top: 20px;
+    margin-bottom: 20px;
 }
 
 .arrow span {
@@ -41,9 +70,8 @@ body {
 }
 
 .debug {
-    margin-top: 20px;
     text-align: left;
-    background-color: #fff;
+    background-color: #f9f9f9;
     padding: 10px;
     border-radius: 5px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);

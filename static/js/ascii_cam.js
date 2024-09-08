@@ -3,10 +3,18 @@ const canvas = document.getElementById('asciiCanvas');
 const ctx = canvas.getContext('2d');
 const startButton = document.getElementById('startButton');
 const inputInfo = document.getElementById('input');
+const asciiDensitySlider = document.getElementById('asciiDensity');
+const characterSetSelect = document.getElementById('characterSet');
 
-const ASCII_CHARS = ['@', '#', 'S', '%', '?', '*', '+', ';', ':', ',', '.'];
-const ASCII_WIDTH = 80;
-const ASCII_HEIGHT = 60;
+const CHARACTER_SETS = {
+    standard: ['@', '#', 'S', '%', '?', '*', '+', ';', ':', ',', '.'],
+    simple: ['#', '.'],
+    complex: ['$', '@', 'B', '%', '8', '&', 'W', 'M', '#', '*', 'o', 'a', 'h', 'k', 'b', 'd', 'p', 'q', 'w', 'm', 'Z', 'O', '0', 'Q', 'L', 'C', 'J', 'U', 'Y', 'X', 'z', 'c', 'v', 'u', 'n', 'x', 'r', 'j', 'f', 't', '/', '\\', '|', '(', ')', '1', '{', '}', '[', ']', '?', '-', '_', '+', '~', '<', '>', 'i', '!', 'l', 'I', ';', ':', ',', '"', '^', '`', '\'', '.']
+};
+
+let ASCII_CHARS = CHARACTER_SETS.standard;
+let ASCII_WIDTH = 80;
+let ASCII_HEIGHT = 60;
 
 let isRunning = false;
 let stream = null;
@@ -17,6 +25,26 @@ ctx.font = '10px monospace';
 ctx.fillStyle = '#00ff00';
 
 startButton.addEventListener('click', toggleASCIICam);
+asciiDensitySlider.addEventListener('input', updateASCIIDensity);
+characterSetSelect.addEventListener('change', updateCharacterSet);
+
+function updateASCIIDensity() {
+    const density = parseInt(asciiDensitySlider.value);
+    ASCII_WIDTH = Math.floor(density * 1.33);
+    ASCII_HEIGHT = density;
+    canvas.width = ASCII_WIDTH * 10;
+    canvas.height = ASCII_HEIGHT * 10;
+    if (isRunning) {
+        processFrame();
+    }
+}
+
+function updateCharacterSet() {
+    ASCII_CHARS = CHARACTER_SETS[characterSetSelect.value];
+    if (isRunning) {
+        processFrame();
+    }
+}
 
 async function toggleASCIICam() {
     if (isRunning) {
