@@ -5,6 +5,7 @@ const startButton = document.getElementById('startButton');
 const inputInfo = document.getElementById('input');
 const asciiDensitySlider = document.getElementById('asciiDensity');
 const characterSetSelect = document.getElementById('characterSet');
+const colorModeCheckbox = document.getElementById('colorMode');
 
 const CHARACTER_SETS = {
     standard: ['@', '#', 'S', '%', '?', '*', '+', ';', ':', ',', '.'],
@@ -22,11 +23,11 @@ let stream = null;
 canvas.width = ASCII_WIDTH * 10;
 canvas.height = ASCII_HEIGHT * 10;
 ctx.font = '10px monospace';
-ctx.fillStyle = '#00ff00';
 
 startButton.addEventListener('click', toggleASCIICam);
 asciiDensitySlider.addEventListener('input', updateASCIIDensity);
 characterSetSelect.addEventListener('change', updateCharacterSet);
+colorModeCheckbox.addEventListener('change', updateColorMode);
 
 function updateASCIIDensity() {
     const density = parseInt(asciiDensitySlider.value);
@@ -41,6 +42,12 @@ function updateASCIIDensity() {
 
 function updateCharacterSet() {
     ASCII_CHARS = CHARACTER_SETS[characterSetSelect.value];
+    if (isRunning) {
+        processFrame();
+    }
+}
+
+function updateColorMode() {
     if (isRunning) {
         processFrame();
     }
@@ -87,9 +94,12 @@ function processFrame() {
     const asciiFrame = convertToASCII(imageData);
     
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    const isColorMode = colorModeCheckbox.checked;
     for (let y = 0; y < ASCII_HEIGHT; y++) {
         for (let x = 0; x < ASCII_WIDTH; x++) {
-            ctx.fillText(asciiFrame[y][x], x * 10, y * 10);
+            const { char, color } = asciiFrame[y][x];
+            ctx.fillStyle = isColorMode ? color : '#00ff00';
+            ctx.fillText(char, x * 10, y * 10);
         }
     }
 
@@ -98,13 +108,20 @@ function processFrame() {
 
 function convertToASCII(imageData) {
     const asciiFrame = [];
+    const isColorMode = colorModeCheckbox.checked;
     for (let y = 0; y < ASCII_HEIGHT; y++) {
         const row = [];
         for (let x = 0; x < ASCII_WIDTH; x++) {
             const index = (y * ASCII_WIDTH + x) * 4;
-            const avg = (imageData.data[index] + imageData.data[index + 1] + imageData.data[index + 2]) / 3;
-            const charIndex = Math.floor(avg / 255 * (ASCII_CHARS.length - 1));
-            row.push(ASCII_CHARS[charIndex]);
+            const r = imageData.data[index];
+            const g = imageData.data[index + 1];
+            const b = imageData.data[index + 2];
+            const brightness = (r + g + b) / 3;
+            const charIndex = Math.floor(brightness / 255 * (ASCII_CHARS.length - 1));
+            row.push({
+                char: ASCII_CHARS[charIndex],
+                color: isColorMode ? `rgb(${r},${g},${b})` : `rgb(${brightness},${brightness},${brightness})`
+            });
         }
         asciiFrame.push(row);
     }
