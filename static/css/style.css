@@ -1,5 +1,5 @@
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Inter', Arial, sans-serif;
     background-color: #f0f0f0;
     margin: 0;
     padding: 0;
@@ -7,49 +7,96 @@ body {
     justify-content: center;
     align-items: center;
     min-height: 100vh;
+    color: #333;
+    position: relative;
+    overflow: hidden;
 }
 
 .container {
-    text-align: center;
-    background-color: #ffffff;
+    width: 100%;
+    max-width: 1200px;
     padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    position: relative;
+    z-index: 1;
+}
+
+.bento-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.bento-item {
+    background-color: #ffffff;
+    border-radius: 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    transition: all 0.3s ease;
+}
+
+.bento-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.canvas-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 #asciiCanvas {
     background-color: #000;
     border: 1px solid #333;
-    margin-bottom: 20px;
+    max-width: 100%;
+    height: auto;
+}
+
+.controls-container {
+    display: flex;
+    flex-direction: column;
 }
 
 .controls {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    margin-bottom: 20px;
+    gap: 15px;
 }
 
 .control-group {
-    margin: 10px 0;
     display: flex;
     flex-direction: column;
-    align-items: center;
+    gap: 5px;
 }
 
 .control-group label {
-    margin-bottom: 5px;
-    font-weight: bold;
+    font-weight: 600;
+    font-size: 14px;
 }
 
 .control-group input[type="range"],
 .control-group select {
-    width: 200px;
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.radio-group {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.radio-group input[type="radio"] {
+    margin-right: 5px;
 }
 
 .arrow {
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     background-color: #4CAF50;
     color: white;
     padding: 10px 20px;
@@ -57,7 +104,12 @@ body {
     border-radius: 5px;
     cursor: pointer;
     font-size: 16px;
-    margin-bottom: 20px;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+}
+
+.arrow:hover {
+    background-color: #45a049;
 }
 
 .arrow span {
@@ -69,19 +121,82 @@ body {
     height: 20px;
 }
 
-.debug {
-    text-align: left;
-    background-color: #f9f9f9;
+.dock-container {
+    padding: 0;
+    overflow: hidden;
+}
+
+.dock {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
     padding: 10px;
-    border-radius: 5px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    height: 100%;
 }
 
-.debug dt {
-    font-weight: bold;
+.dock-item {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-.debug dd {
-    margin-left: 0;
-    margin-bottom: 10px;
+#video {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.shoutout {
+    position: fixed;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+    z-index: 10;
+}
+
+@keyframes float {
+    0% {
+        transform: translateY(0) rotate(0deg);
+    }
+    50% {
+        transform: translateY(-20px) rotate(5deg);
+    }
+    100% {
+        transform: translateY(0) rotate(0deg);
+    }
+}
+
+.background-animation {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    opacity: 0.1;
+    pointer-events: none;
+}
+
+.camera-icon {
+    position: absolute;
+    font-size: 24px;
+    animation: float 6s ease-in-out infinite;
+}
+
+@media (max-width: 768px) {
+    .bento-grid {
+        grid-template-columns: 1fr;
+    }
 }
