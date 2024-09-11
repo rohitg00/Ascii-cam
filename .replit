@@ -28,7 +28,6 @@ args = "python main.py"
 waitForPort = 5000
 
 [deployment]
-deploymentTarget = "gce"
 run = ["sh", "-c", "python main.py"]
 
 [[ports]]
