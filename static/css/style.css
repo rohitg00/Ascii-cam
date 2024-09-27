@@ -75,7 +75,9 @@ body {
 }
 
 .control-group input[type="range"],
-.control-group select {
+.control-group select,
+.control-group input[type="text"],
+.control-group input[type="color"] {
     width: 100%;
     padding: 8px;
     border: 1px solid #ccc;
@@ -185,7 +187,7 @@ body {
     width: 100%;
     height: 100%;
     z-index: 0;
-    opacity: 0.3; /* Increased opacity from 0.1 to 0.3 */
+    opacity: 0.3;
     pointer-events: none;
 }
 
@@ -199,4 +201,38 @@ body {
     .bento-grid {
         grid-template-columns: 1fr;
     }
+}
+
+#filterSelect,
+#textStyle {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+    background-color: #fff;
+    color: #333;
+}
+
+#filterSelect:focus,
+#textStyle:focus {
+    outline: none;
+    border-color: #4CAF50;
+    box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
+}
+
+#filterSelect option,
+#textStyle option {
+    padding: 8px;
+}
+
+#customCharacters {
+    font-family: monospace;
+}
+
+#textColor,
+#backgroundColor {
+    height: 40px;
+    padding: 0;
+    border: none;
 }

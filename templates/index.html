@@ -7,9 +7,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-    <div class="background-animation">
-        <!-- We'll add camera icons here using JavaScript -->
-    </div>
+    <div class="background-animation"></div>
     <div class="container">
         <div class="bento-grid">
             <div class="bento-item canvas-container">
@@ -25,7 +23,7 @@
                     </button>
                     <div class="control-group">
                         <label for="asciiDensity">ASCII Density:</label>
-                        <input type="range" id="asciiDensity" min="20" max="100" value="80" step="10">
+                        <input type="range" id="asciiDensity" min="20" max="100" value="60">
                     </div>
                     <div class="control-group">
                         <label for="characterSet">Character Set:</label>
@@ -53,9 +51,46 @@
                             <label for="greenMode">Green</label>
                             <input type="radio" id="colorMode" name="colorMode" value="color">
                             <label for="colorMode">Color</label>
-                            <input type="radio" id="blackAndWhiteMode" name="colorMode" value="bw">
-                            <label for="blackAndWhiteMode">Black & White</label>
+                            <input type="radio" id="bwMode" name="colorMode" value="bw">
+                            <label for="bwMode">B&W</label>
                         </div>
+                    </div>
+                    <div class="control-group">
+                        <label for="filterSelect">Filter:</label>
+                        <select id="filterSelect">
+                            <option value="none">None</option>
+                            <option value="invert">Invert</option>
+                            <option value="sepia">Sepia</option>
+                            <option value="grayscale">Grayscale</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label for="pixelSize">Pixel Size:</label>
+                        <input type="range" id="pixelSize" min="1" max="20" value="10">
+                    </div>
+                    <div class="control-group">
+                        <label for="textSize">Text Size:</label>
+                        <input type="range" id="textSize" min="8" max="24" value="10">
+                    </div>
+                    <div class="control-group">
+                        <label for="customCharacters">Custom Characters:</label>
+                        <input type="text" id="customCharacters" placeholder="Enter custom characters">
+                    </div>
+                    <div class="control-group">
+                        <label for="textStyle">Text Style:</label>
+                        <select id="textStyle">
+                            <option value="normal">Normal</option>
+                            <option value="bold">Bold</option>
+                            <option value="italic">Italic</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label for="textColor">Text Color:</label>
+                        <input type="color" id="textColor" value="#00ff00">
+                    </div>
+                    <div class="control-group">
+                        <label for="backgroundColor">Background Color:</label>
+                        <input type="color" id="backgroundColor" value="#000000">
                     </div>
                     <button id="saveSnapshotButton" class="arrow">
                         <span>Save Snapshot</span>
